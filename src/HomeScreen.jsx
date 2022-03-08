@@ -1,6 +1,6 @@
 import React from 'react';
-import { AppBar, List, ListItem, ListItemIcon, ListItemText, Toolbar, Typography } from '@mui/material';
-import AddIcon from '@mui/icons-material/Add';
+import { AppBar, Container, List, Toolbar, Typography } from '@mui/material';
+import PostCard from './PostCard';
 
 export default class HomeScreen extends React.Component {
   constructor(props) {
@@ -20,20 +20,12 @@ export default class HomeScreen extends React.Component {
           </Typography>
         </Toolbar>
       </AppBar>
-      <List>
-        <ListItem>
-          <ListItemIcon>
-            <AddIcon />
-          </ListItemIcon>
-          <ListItemText>Hello!</ListItemText>
-        </ListItem>
-        <ListItem>
-          <ListItemText>Hello!</ListItemText>
-        </ListItem>
-        <ListItem>
-          <ListItemText>Hello!</ListItemText>
-        </ListItem>
-      </List>
+      <Container maxWidth='md'>
+        <List>
+          <PostCard />
+          <PostCard />
+        </List>
+      </Container>
       </>
     );
   }
