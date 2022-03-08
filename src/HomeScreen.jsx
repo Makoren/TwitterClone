@@ -1,6 +1,7 @@
 import React from 'react';
 import { AppBar, Container, List, Toolbar, Typography } from '@mui/material';
 import PostCard from './PostCard';
+import CreatePost from './CreatePost';
 
 export default class HomeScreen extends React.Component {
   constructor(props) {
@@ -22,6 +23,7 @@ export default class HomeScreen extends React.Component {
       </AppBar>
       <Container maxWidth='md'>
         <List>
+          <CreatePost />
           <PostCard />
           <PostCard />
         </List>
