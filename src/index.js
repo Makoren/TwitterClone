@@ -1,7 +1,8 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
+import HomeScreen from './HomeScreen';
 
 ReactDOM.render(
-    <button>Click</button>,
-    document.getElementById('root')
+  <HomeScreen />,
+  document.getElementById('root')
 );
