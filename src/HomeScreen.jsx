@@ -7,8 +7,23 @@ export default class HomeScreen extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-        fileName: 'Home Screen',
+      posts: [],
     };
+  }
+
+  sendPost(post) {
+    const newPosts = [...this.state.posts];
+    newPosts.push(post);
+    this.setState({
+      posts: newPosts,
+    });
+  }
+
+  renderPosts() {
+    // TODO: add more here when user data from Firebase is available
+    return this.state.posts.map((post) => {
+      return <PostCard key={post.id} content={post.content} />
+    });
   }
 
   render() {
@@ -22,10 +37,9 @@ export default class HomeScreen extends React.Component {
         </Toolbar>
       </AppBar>
       <Container maxWidth='md'>
+        <CreatePost sendPost={(content) => this.sendPost(content)} />
         <List>
-          <CreatePost />
-          <PostCard />
-          <PostCard />
+          {this.renderPosts()}
         </List>
       </Container>
       </>
