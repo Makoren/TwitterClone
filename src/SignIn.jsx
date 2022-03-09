@@ -8,79 +8,97 @@ import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
+import { getAuth, signInWithEmailAndPassword } from 'firebase/auth';
 
 const theme = createTheme();
 
-export default function SignIn() {
-  const handleSubmit = (event) => {
-    event.preventDefault();
-    const data = new FormData(event.currentTarget);
-    // eslint-disable-next-line no-console
-    console.log({
-      email: data.get('email'),
-      password: data.get('password'),
-    });
-  };
+export default class SignIn extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      email: "",
+      password: "",
+    };
+  }
 
-  return (
-    <ThemeProvider theme={theme}>
-      <Container component="main" maxWidth="xs">
-        <CssBaseline />
-        <Box
-          sx={{
-            marginTop: 8,
-            display: 'flex',
-            flexDirection: 'column',
-            alignItems: 'center',
-          }}
-        >
-          <Typography component="h1" variant="h5">
-            Log in
-          </Typography>
-          <Box component="form" onSubmit={handleSubmit} noValidate sx={{ mt: 1 }}>
-            <TextField
-              margin="normal"
-              required
-              fullWidth
-              id="email"
-              label="Email Address"
-              name="email"
-              autoComplete="email"
-              autoFocus
-            />
-            <TextField
-              margin="normal"
-              required
-              fullWidth
-              name="password"
-              label="Password"
-              type="password"
-              id="password"
-              autoComplete="current-password"
-            />
-            <Button
-              type="submit"
-              fullWidth
-              variant="contained"
-              sx={{ mt: 3, mb: 2 }}
-            >
-              Log In
-            </Button>
-            <Grid container>
-              <Grid item sx={{ flexGrow: 1 }}>
-                <Link href="/" variant="body2">
-                  Back to home
-                </Link>
+  handleLogin() {
+    const auth = getAuth();
+    signInWithEmailAndPassword(auth, this.state.email, this.state.password)
+      .then((userCredential) => {
+        console.log(`Welcome, ${this.state.email}!`);
+      })
+      .catch((error) => {
+        console.log(`Failed to log in. ${error.message}`);
+      })
+  }
+
+  render() {
+    return (
+      <ThemeProvider theme={theme}>
+        <Container component="main" maxWidth="xs">
+          <CssBaseline />
+          <Box
+            sx={{
+              marginTop: 8,
+              display: 'flex',
+              flexDirection: 'column',
+              alignItems: 'center',
+            }}
+          >
+            <Typography component="h1" variant="h5">
+              Log in
+            </Typography>
+            <Box component="form" noValidate sx={{ mt: 1 }}>
+              <TextField
+                margin="normal"
+                required
+                fullWidth
+                id="email"
+                label="Email Address"
+                name="email"
+                autoComplete="email"
+                autoFocus
+                onChange={(event) => this.setState({
+                  email: event.target.value,
+                })}
+              />
+              <TextField
+                margin="normal"
+                required
+                fullWidth
+                name="password"
+                label="Password"
+                type="password"
+                id="password"
+                autoComplete="current-password"
+                onChange={(event) => this.setState({
+                  password: event.target.value,
+                })}
+              />
+              <Button
+                onClick={() => this.handleLogin()}
+                fullWidth
+                variant="contained"
+                sx={{ mt: 3, mb: 2 }}
+              >
+                Log In
+              </Button>
+              <Grid container>
+                <Grid item sx={{ flexGrow: 1 }}>
+                  <Link href="/" variant="body2">
+                    Back to home
+                  </Link>
+                </Grid>
+                <Grid item>
+                  <Link href="/register" variant="body2">
+                    Don't have an account? Register
+                  </Link>
+                </Grid>
               </Grid>
-              <Grid item>
-                <Link href="/register" variant="body2">
-                  Don't have an account? Register
-                </Link>
-              </Grid>
-            </Grid>
+            </Box>
           </Box>
-        </Box>
-      </Container>
-    </ThemeProvider>
-  );
+        </Container>
+      </ThemeProvider>
+    );
+  }
 }
