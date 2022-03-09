@@ -1,5 +1,5 @@
 import React from 'react';
-import { AppBar, Container, List, Toolbar, Typography } from '@mui/material';
+import { AppBar, Button, Container, List, Toolbar, Typography } from '@mui/material';
 import PostCard from './PostCard';
 import CreatePost from './CreatePost';
 
@@ -29,19 +29,21 @@ export default class HomeScreen extends React.Component {
   render() {
     return (
       <>
-      <AppBar position='static'>
-        <Toolbar variant='dense'>
-          <Typography>
-            Home
-          </Typography>
-        </Toolbar>
-      </AppBar>
-      <Container maxWidth='md'>
-        <CreatePost sendPost={(content) => this.sendPost(content)} />
-        <List>
-          {this.renderPosts()}
-        </List>
-      </Container>
+        <AppBar position='static'>
+          <Toolbar>
+            <Typography sx={{ flexGrow: 1 }}>
+              Home
+            </Typography>
+            <Button href="/login" color="inherit">Login</Button>
+            <Button href="/register" color="inherit">Register</Button>
+          </Toolbar>
+        </AppBar>
+        <Container maxWidth='md'>
+          <CreatePost sendPost={(post) => this.sendPost(post)} />
+          <List>
+            {this.renderPosts()}
+          </List>
+        </Container>
       </>
     );
   }
