@@ -3,7 +3,7 @@ import { Stack, AppBar, Button, Container, List, Toolbar, Typography, Avatar } f
 import PostCard from './PostCard';
 import CreatePost from './CreatePost';
 import { getAuth, onAuthStateChanged, signOut } from 'firebase/auth';
-import { getDatabase, onValue, ref } from 'firebase/database';
+import { getDatabase, onValue, ref, update, push, child } from 'firebase/database';
 
 export default class HomeScreen extends React.Component {
   constructor(props) {
@@ -12,6 +12,7 @@ export default class HomeScreen extends React.Component {
       posts: [],
       isAuthenticated: false,
       userInfo: {
+        uid: null,
         firstName: "",
         lastName: "",
       }
@@ -19,15 +20,31 @@ export default class HomeScreen extends React.Component {
   }
 
   sendPost(post) {
-    const newPosts = [...this.state.posts];
-    newPosts.push(post);
-    this.setState({
-      posts: newPosts,
-    });
+    // TOOD: redo this as per Trello description
+    // const db = getDatabase(this.props.firebaseApp);
+    // const localPost = post;
+    // if (this.state.isAuthenticated && this.state.userInfo) {
+    //   const postData = {
+    //     content: localPost.content,
+    //   };
+
+    //   const newPostKey = push(child(ref(db), `users/${this.state.userInfo.uid}/posts`)).key;
+    //   const updates = {};
+    //   updates[`users/${this.state.userInfo.uid}/posts/${newPostKey}`] = postData;
+    //   update(ref(db), updates);
+    // } else {
+    //   console.log("Cannot post without logging in.");
+    // }
   }
 
   renderPosts() {
-    // TODO: add more here when user data from Firebase is available
+    // const db = getDatabase(this.props.firebaseApp);
+    // onValue(ref(db, "users"), (snapshot) => {
+    //   snapshot.forEach((userSnapshot) => {
+    //     const user = userSnapshot.val();
+    //   });
+    // })
+
     return this.state.posts.map((post) => {
       return <PostCard key={post.id} content={post.content} />
     });
@@ -87,6 +104,9 @@ export default class HomeScreen extends React.Component {
       if (user) {
         this.setState({
           isAuthenticated: true,
+          userInfo: {
+            uid: user.uid,
+          }
         });
         this.updateUserInfo(user);
       } else {
