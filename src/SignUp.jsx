@@ -9,6 +9,8 @@ import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { getAuth, createUserWithEmailAndPassword } from 'firebase/auth';
+import { getDatabase, ref, set } from 'firebase/database';
+import { Navigate } from 'react-router-dom';
 
 const theme = createTheme();
 
@@ -20,15 +22,21 @@ export default class SignUp extends React.Component {
       lastName: "",
       email: "",
       password: "",
+      shouldGoHome: false,
     };
+    this.db = getDatabase(props.firebaseApp);
   }
 
   handleRegister() {
     const auth = getAuth();
     createUserWithEmailAndPassword(auth, this.state.email, this.state.password)
       .then((userCredential) => {
-        // signed in
-        console.log(`Welcome, ${this.state.firstName} ${this.state.lastName}!`);
+        const uid = userCredential.user.uid;
+        set(ref(this.db, `users/${uid}`), {
+          firstName: this.state.firstName,
+          lastName: this.state.lastName,
+        });
+        this.setState({shouldGoHome: true});
       })
       .catch((error) => {
         console.log(`Could not log in. ${error.message}`);
@@ -130,6 +138,10 @@ export default class SignUp extends React.Component {
               </Grid>
             </Box>
           </Box>
+          {this.state.shouldGoHome
+            ? <Navigate to="/" replace={true} />
+            : null
+          }
         </Container>
       </ThemeProvider>
     );

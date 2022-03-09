@@ -9,6 +9,7 @@ import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { getAuth, signInWithEmailAndPassword } from 'firebase/auth';
+import { Navigate } from 'react-router-dom';
 
 const theme = createTheme();
 
@@ -18,6 +19,7 @@ export default class SignIn extends React.Component {
     this.state = {
       email: "",
       password: "",
+      shouldGoHome: false,
     };
   }
 
@@ -25,11 +27,11 @@ export default class SignIn extends React.Component {
     const auth = getAuth();
     signInWithEmailAndPassword(auth, this.state.email, this.state.password)
       .then((userCredential) => {
-        console.log(`Welcome, ${this.state.email}!`);
+        this.setState({shouldGoHome: true});
       })
       .catch((error) => {
         console.log(`Failed to log in. ${error.message}`);
-      })
+      });
   }
 
   render() {
@@ -97,6 +99,10 @@ export default class SignIn extends React.Component {
               </Grid>
             </Box>
           </Box>
+          {this.state.shouldGoHome
+            ? <Navigate to="/" replace={true} />
+            : null
+          }
         </Container>
       </ThemeProvider>
     );
