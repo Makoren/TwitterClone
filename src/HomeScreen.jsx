@@ -20,21 +20,17 @@ export default class HomeScreen extends React.Component {
   }
 
   sendPost(post) {
-    // TOOD: redo this as per Trello description
-    // const db = getDatabase(this.props.firebaseApp);
-    // const localPost = post;
-    // if (this.state.isAuthenticated && this.state.userInfo) {
-    //   const postData = {
-    //     content: localPost.content,
-    //   };
-
-    //   const newPostKey = push(child(ref(db), `users/${this.state.userInfo.uid}/posts`)).key;
-    //   const updates = {};
-    //   updates[`users/${this.state.userInfo.uid}/posts/${newPostKey}`] = postData;
-    //   update(ref(db), updates);
-    // } else {
-    //   console.log("Cannot post without logging in.");
-    // }
+    if (this.state.isAuthenticated && this.state.userInfo) {
+      const db = getDatabase(this.props.firebaseApp);
+      const postData = {
+        userId: this.state.userInfo.uid,
+        content: post.content,
+      };
+      console.log(postData);
+      push(ref(db, "posts"), postData);
+    } else {
+      console.log("Cannot post without logging in.");
+    }
   }
 
   renderPosts() {
@@ -91,6 +87,7 @@ export default class HomeScreen extends React.Component {
       const data = snapshot.val();
       this.setState({
         userInfo: {
+          uid: user.uid,
           firstName: data.firstName,
           lastName: data.lastName,
         },
@@ -104,9 +101,6 @@ export default class HomeScreen extends React.Component {
       if (user) {
         this.setState({
           isAuthenticated: true,
-          userInfo: {
-            uid: user.uid,
-          }
         });
         this.updateUserInfo(user);
       } else {
